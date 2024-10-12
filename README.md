@@ -1,11 +1,16 @@
 # Game Review Sentiment Analysis
 
-<h3>Course ID:</h3> CSC14119
+*VNUHCM - University of Science*
+
+<h3>Course ID:</h3> CSC14119 - Introduction to Data Science
+
 <h3>Team members:</h3>
 
-- 22128396 - Khuu Thanh Thien
+- 22127396 - Khuu Thanh Thien
 - 22127407 - Huynh Thien Thuan
 - 22127371 - Ngo Tan Tai
+
+# Description
 
 This project focuses on analyzing game reviews by extracting data from:
 
