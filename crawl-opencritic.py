@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import pandas as pd
 import xml.etree.ElementTree as ET
+import re
 
 sitemap_url = 'https://opencritic.com/sitemap.xml'
 
@@ -22,7 +23,10 @@ def get_game_links_from_sitemap(sitemap_link):
         root = ET.fromstring(response.content)
         namespaces = {'ns': 'http://www.sitemaps.org/schemas/sitemap/0.9'}
         game_links = [elem.text for elem in root.findall('.//ns:loc', namespaces)]
-        return game_links  
+
+        filtered_game_links = [link for link in game_links if "/media" not in link and "/reviews" not in link]
+
+        return filtered_game_links
     else:
         print(f"Could not retrieve sitemap: {sitemap_link}. Status code: {response.status_code}")
         return []
@@ -31,7 +35,7 @@ def parse_game_page(url):
     try:
         response = requests.get(url)
         soup = BeautifulSoup(response.content, 'html.parser')
-
+        
         title = soup.find('h1', class_='my-2 my-md-4').get_text(strip=True) if soup.find('h1', class_='my-2 my-md-4') else "n/a"
         
         genre_tag = soup.find(text="Genre")
@@ -60,6 +64,13 @@ def parse_game_page(url):
         rating_tag = soup.find('div', class_="inner-orb")
         rating = rating_tag.get_text(strip=True) if rating_tag else "n/a"
         
+        reviews_tag = soup.find('a', href=lambda href: href and "/reviews" in href)
+        if reviews_tag:
+            match = re.search(r'\d+', reviews_tag.get_text())
+            num_reviews = int(match.group()) if match else "n/a"
+        else:
+            num_reviews = "n/a"
+        
         return {
             "Game Title": title,
             "Game Genre": genre,
@@ -68,7 +79,8 @@ def parse_game_page(url):
             "Publisher": publisher,
             "Release Date": release_date,
             "Platform": platform,
-            "Rating": rating
+            "Rating": rating,
+            "Number of Rating": num_reviews
         }
     
     except requests.exceptions.RequestException as e:
@@ -85,7 +97,7 @@ for link in game_links:
     game_data = parse_game_page(link)
     if game_data and game_data['Game Title'] != "n/a":  
         games_data.append(game_data)
-
+        
 df_games = pd.DataFrame(games_data)
 
 df_games = df_games.dropna(how='all')
