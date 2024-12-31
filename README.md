@@ -20,5 +20,7 @@ This project focuses on analyzing game reviews by extracting data from:
 
 and performing sentiment analysis to determine the overall tone of the reviews. Using various data science techniques, we aim to gain insights into how games are perceived by the gaming community and identify trends in user feedback.
 
+The dataset (filename: `cleaned_data.csv`) can be ontained from this repository. For future updates (not guaranteed), please refer to my upload on [kaggle](https://www.kaggle.com/datasets/tiamatt/game-collection/data).
+
 # Disclaimer
-> All sentiments derived from this project should not be regarded as definitive or reliable.
+> ### All sentiments derived from this project should not be regarded as definitive or reliable.
